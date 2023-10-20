@@ -16,19 +16,21 @@ body {
     height: 80px;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Alinha as imagens para a esquerda e direita */
+    justify-content: space-between; 
     padding: 10px;
     border-radius: 10px;
 }
 
 .cabecalho .logo-patrimonio {
-    width: 5%;  
+    width: 15%;  
     height: auto; 
+    float: left;
 }
 
 .cabecalho .logo-ufmg {
-    width: 5%;  
+    width: 35%;  
     height: auto; 
+    float: right;
 }
 
 .cabecalho .titulo, footer .texto {
