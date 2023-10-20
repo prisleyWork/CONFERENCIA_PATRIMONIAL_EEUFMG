@@ -13,10 +13,21 @@
 </head>
 <body>
     <div class="cabecalho">
-        <img class="logo-patrimonio" src="./src/imagens/ico.png" alt="Logo do Patrimônio">
-        <div class="titulo">Seção de Patrimônio EEUFMG Consulta Patrimonial </div>    
-        <img class="logo-ufmg" src="./src/imagens/UFMG.png" alt="Logo da UFMG">
-    </div>
+        <div style="width: 30%;">
+            <a href="https://patrimonio.eng.ufmg.br/" target="_blank">
+                <img class="logo-patrimonio" src="./src/imagens/ico.png" alt="Logo do Patrimônio">
+            </a>
+        </div>
+        <div class="titulo">
+            Seção de Patrimônio EEUFMG Consulta Patrimonial
+        </div>    
+        <div style="width: 30%;">
+            <a href="https://ufmg.br/" target="_blank">
+                <img class="logo-ufmg" src="./src/imagens/UFMG.png" alt="Logo da UFMG">
+            </a>
+        </div>
+    </div>    
+    </div>        
     <div class="conteudo">
         <div class="Busca">
             <input type="text" id="numero" placeholder="Digite o patrimônio aqui">
@@ -26,9 +37,9 @@
     </div>
     <footer>
         <div class="texto">
-            <p>Desenvolvido pela Seção de Patrimonio</p>
+            <p>Seção de Patrimonio - <span id="anoAtual"></span></p>
             <p>Dados atualizados em: 19/10/2023</p>
-            <p>V.1.0.0-beta</p>
+            <p>V.1.0.1-beta</p>
         </div>
     </footer>
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
