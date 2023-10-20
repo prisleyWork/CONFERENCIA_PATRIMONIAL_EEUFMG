@@ -7,6 +7,11 @@ fetch('BENS.xlsx')
    workbook = XLSX.read(data, {type: 'array'});
 });
 
+const anoAtualSpan = document.getElementById("anoAtual");
+        const dataAtual = new Date();
+        const ano = dataAtual.getFullYear();
+        anoAtualSpan.textContent = ano;
+
 function formatInput(input) {
     var noLeadingZeros = input.replace(/^0+/, '');
     var formattedInput = noLeadingZeros.replace(/-\d$/, '');
