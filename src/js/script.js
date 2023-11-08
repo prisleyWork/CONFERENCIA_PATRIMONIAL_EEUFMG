@@ -61,9 +61,9 @@ function buscar() {
            document.getElementById('resultado').innerHTML = 'Número de patrimônio: ' + jsonData[i][0] + '-' + jsonData[i][1] +'<br>' +
                                                             'Tipo: ' + jsonData[i][8] + '<br>' +
                                                             'Descrição: ' + jsonData[i][5] + '<br>' +
-                                                            'Situação do Bem: ' + translatedSituation +'<br>' +
+                                                            'Situação: ' + translatedSituation +'<br>' +
                                                             'Condição do Bem: ' + translatedCondition + '<br>' +
-                                                            'Setor: ' + jsonData[i][7] + '<br>' +
+                                                            'Local da Guarda: ' + jsonData[i][7] + '<br>' +
                                                             'Responsável: ' + jsonData[i][9];
            inputField.value = '';
            inputField.focus();
