@@ -18,6 +18,9 @@ function formatInput(input) {
     return formattedInput;
 }
 
+var codigo = new URLSearchParams(window.location.search).get("=");
+document.getElementById("numero").value = codigo;
+
 function translateCondition(condition) {
     var translations = {
         'BM': 'Bom',
