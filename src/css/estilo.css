@@ -12,7 +12,7 @@ body {
 }
 
 .cabecalho {
-    background: linear-gradient(90deg, #007f00, #00b300);
+    background: linear-gradient(90deg, #004A75, #559EB7);
     color: white;
     padding: 20px;
     display: flex;
@@ -24,6 +24,8 @@ body {
 
 .cabecalho img {
     height: 60px;
+    padding: 0 20px;
+    margin-right: 20px;
 }
 
 .cabecalho .titulo {
@@ -58,7 +60,7 @@ body {
 }
 
 .Busca button {
-    background-color: #007f00;
+    background-color: #004A75;
     color: white;
     border: none;
     padding: 12px 20px;
@@ -69,7 +71,7 @@ body {
 }
 
 .Busca button:hover {
-    background-color: #005f00;
+    background-color: #559EB7;
 }
 
 .resultado {
@@ -81,6 +83,7 @@ body {
 }
 
 .historico {
+    text-align: left;
     margin-top: 20px;
     padding: 15px;
     background-color: #ffffff;
@@ -91,7 +94,7 @@ body {
 
 .historico h3 {
     font-size: 18px;
-    color: #007f00;
+    color: #004A75;
     margin-bottom: 10px;
 }
 
@@ -111,12 +114,31 @@ body {
     border-bottom: none;
 }
 
+
+button#copiar-historico {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #004A75;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button#copiar-historico:hover {
+    background-color: #559EB7;
+}
+
+
+
 footer {
     position: fixed; /* Mantém o rodapé fixo */
     bottom: 0; /* Posiciona na parte inferior */
     left: 0; /* Garante alinhamento à esquerda */
     width: 100%; /* Ocupa toda a largura da página */
-    background: #007f00;
+    background: #559EB7;
     color: white;
     padding: 10px 20px;
     text-align: center;

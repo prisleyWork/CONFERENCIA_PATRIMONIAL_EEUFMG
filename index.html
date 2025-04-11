@@ -10,9 +10,13 @@
 </head>
 <body>
     <div class="cabecalho">
-        <img src="./src/imagens/ico.png" alt="Logo do Patrimônio">
-        <div class="titulo">Seção de Patrimônio EEUFMG Consulta Patrimonial</div>
-        <img src="./src/imagens/UFMG.png" alt="Logo da UFMG">
+        <a href="https://patrimonio.eng.ufmg.br/" target="_blank">
+            <img src="./src/imagens/ico.png" alt="Logo do Patrimônio">
+        </a>
+        <div class="titulo">Consulta Patrimonial</div>
+        <a href="https://ufmg.br/" target="_blank">
+            <img src="./src/imagens/UFMG.png" alt="Logo da UFMG">
+        </a>
     </div>
     <div class="conteudo">
         <div class="Busca">
@@ -23,11 +27,14 @@
         <div id="historico" class="historico">
             <h3>Histórico de Bens Pesquisados</h3>
             <ul id="lista-historico"></ul>
+            <button id="copiar-historico" onclick="copiarHistorico()">Copiar Histórico</button>
         </div>
     </div>
     <footer>
-        <p>Seção de Patrimônio - <span id="anoAtual"></span></p>
+        <P>Atualização Abril 2025</P>
         <p>Versão: 2.0.0</p>
+        <p>Desenvolvido na Seção De Patrimônio Da Escola De Engenharia UFMG - <span id="anoAtual"></span></p>
+
     </footer>
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script src="./src/js/script.js"></script>

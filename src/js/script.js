@@ -80,26 +80,26 @@ function buscar() {
 
                     // Verificar campo ATM
                     var atmInfo = jsonData[i][2];
-                    var atmDisplay = atmInfo ? '<br>ATM: ' + atmInfo : '';
+                    var atmDisplay = atmInfo ? '<br><b>ATM:</b> ' + atmInfo : '';
 
-                    return 'Número de patrimônio: ' + jsonData[i][0] + '-' + jsonData[i][1] + '<br>' +
-                           'Tipo: ' + jsonData[i][25] + '<br>' +
-                           'Descrição: ' + jsonData[i][8] + '<br>' +
-                           'Situação: ' + translatedSituation + '<br>' +
-                           'Condição do Bem: ' + translatedCondition + '<br>' +
-                           'Local da Guarda: ' + jsonData[i][17] + '<br>' +
-                           'Responsável: ' + jsonData[i][27] +
+                    return '<b>Número de patrimônio:</b> ' + jsonData[i][0] + '-' + jsonData[i][1] + '<br>' +
+                           '<b>Tipo:</b> ' + jsonData[i][25] + '<br>' +
+                           '<b>Descrição:</b> ' + jsonData[i][8] + '<br>' +
+                           '<b>Situação:</b> ' + translatedSituation + '<br>' +
+                           '<b>Condição do Bem:</b> ' + translatedCondition + '<br>' +
+                           '<b>Local da Guarda:</b> ' + jsonData[i][17] + '<br>' +
+                           '<b>Responsável:</b> ' + jsonData[i][27] +
                            atmDisplay;
                 }
             } else if (estrutura === "BAIXADOS") {
                 // Estrutura específica da planilha BAIXADOS
                 if (jsonData[i][0] == formattedInput || jsonData[i][2] == formattedInput) {
-                    return 'Número de patrimônio: ' + jsonData[i][0] + '-' + jsonData[i][1] + '<br>' +
-                           'Número ATM: ' + jsonData[i][3] + '<br>' +
-                           'Setor: ' + jsonData[i][10] + '<br>' +
-                           'Descrição: ' + jsonData[i][2] + '<br>' +
-                           'Último Local da Guarda: ' + jsonData[i][13] + '<br>' +
-                           'Observação: Bens baixados devem ser mantidos no local de guarda atual. Caso deseje desfazer do bem, cadastre no sistema de desfazimento.';
+                    return '<b>Número de patrimônio:</b> ' + jsonData[i][0] + '-' + jsonData[i][1] + '<br>' +
+                           '<b>Número ATM:</b> ' + jsonData[i][3] + '<br>' +
+                           '<b>Setor:</b> ' + jsonData[i][10] + '<br>' +
+                           '<b>Descrição:</b> ' + jsonData[i][2] + '<br>' +
+                           '<b>Último Local da Guarda:</b> ' + jsonData[i][13] + '<br>' +
+                           '<b>Observação:</b> <b>Bens baixados devem ser mantidos no local de guarda atual. Caso deseje desfazer do bem, cadastre no sistema de desfazimento.</b>';
                 }
             }
         }
@@ -123,6 +123,34 @@ function buscar() {
 
     inputField.value = '';
     inputField.focus();
+}
+
+// Função para copiar o histórico mantendo a formatação
+function copiarHistorico() {
+    var listaHistorico = document.getElementById('lista-historico');
+    var spanMensagem = document.createElement('span');
+    spanMensagem.id = 'mensagem-copiado';
+    spanMensagem.textContent = 'Histórico copiado!';
+    spanMensagem.style.color = 'green';
+
+    // Criação de um elemento temporário para copiar o conteúdo
+    var range = document.createRange();
+    range.selectNode(listaHistorico);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    try {
+        document.execCommand('copy');
+        // Exibir mensagem de sucesso
+        listaHistorico.appendChild(spanMensagem);
+        setTimeout(() => spanMensagem.remove(), 3000); // Remove o aviso após 3 segundos
+    } catch (err) {
+        console.error('Falha ao copiar', err);
+    }
+
+    // Remover a seleção
+    selection.removeAllRanges();
 }
 
 // Configurar evento para buscar ao pressionar Enter
