@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,33 +9,63 @@
     <link rel="stylesheet" href="./src/css/estilo.css">
 </head>
 <body>
+    <!-- Cabeçalho -->
     <div class="cabecalho">
-        <a href="https://patrimonio.eng.ufmg.br/" target="_blank">
+        <a href="https://patrimonio.eng.ufmg.br/" target="_blank" aria-label="Link para a página do Patrimônio">
             <img src="./src/imagens/ico.png" alt="Logo do Patrimônio">
         </a>
         <div class="titulo">Consulta Patrimonial</div>
-        <a href="https://ufmg.br/" target="_blank">
+        <a href="https://ufmg.br/" target="_blank" aria-label="Link para a página da UFMG">
             <img src="./src/imagens/UFMG.png" alt="Logo da UFMG">
         </a>
     </div>
+
+    <!-- Conteúdo principal -->
     <div class="conteudo">
         <div class="Busca">
-            <input type="text" id="numero" placeholder="Digite o patrimônio aqui">
-            <button onclick="buscar()">Buscar</button>
+            <!-- Campo de entrada -->
+            <input 
+                type="text" 
+                id="numero" 
+                placeholder="Digite o patrimônio ou palavra-chave aqui" 
+                aria-label="Digite o código do patrimônio ou uma palavra-chave para consulta">
+            <button id="botao-busca" onclick="buscar()">Buscar</button>
+            
+            <!-- Checkbox para ativar busca avançada -->
+            <label for="ativar-busca-avancada" class="label-avancada">
+<input type="checkbox" id="ativar-busca-avancada" onclick="toggleBuscaAvancada()"> Busca Avançada            </label>
+
+            <!-- Menu de busca avançada -->
+            <div id="menu-busca-avancada" style="display: none; margin-top: 20px;">
+                <p>Selecione o tipo de busca:</p>
+                <select id="modo-busca" aria-label="Escolha o tipo de busca">
+                    <option value="atm">Buscar por ATM</option>
+                    <option value="patrimonio">Buscar por Patrimônio</option>
+                    <option value="descricao">Buscar por Descrição</option> <!-- Nova opção adicionada -->
+                </select>
+            </div>
         </div>
-        <div id="resultado" class="resultado"></div>
+
+        <!-- Resultados -->
+        <div id="resultado" class="resultado">
+            <p id="estado-carregamento" style="display: none;">Carregando dados...</p>
+        </div>
+
+        <!-- Histórico -->
         <div id="historico" class="historico">
             <h3>Histórico de Bens Pesquisados</h3>
-            <ul id="lista-historico"></ul>
-            <button id="copiar-historico" onclick="copiarHistorico()">Copiar Histórico</button>
+            <ul id="lista-historico" aria-label="Lista de histórico de bens pesquisados"></ul>
         </div>
     </div>
-    <footer>
-        <P>Atualização Abril 2025</P>
-        <p>Versão: 2.0.0</p>
-        <p>Desenvolvido na Seção De Patrimônio Da Escola De Engenharia UFMG - <span id="anoAtual"></span></p>
 
+    <!-- Rodapé -->
+    <footer>
+        <p>Atualização Abril 2025</p>
+        <p>Versão: 2.0.0</p>
+        <p>Desenvolvido na Seção de Patrimônio da Escola de Engenharia UFMG - <span id="anoAtual"></span></p>
     </footer>
+
+    <!-- Scripts -->
     <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script src="./src/js/script.js"></script>
 </body>

@@ -1,4 +1,4 @@
-/* Estilo atualizado para melhor design */
+/* Estilo atualizado para design responsivo e interativo */
 body {
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
@@ -57,6 +57,12 @@ body {
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+.Busca input:focus {
+    border-color: #004A75;
+    outline: none;
 }
 
 .Busca button {
@@ -67,11 +73,12 @@ body {
     font-size: 16px;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .Busca button:hover {
     background-color: #559EB7;
+    transform: scale(1.05);
 }
 
 .resultado {
@@ -114,7 +121,6 @@ body {
     border-bottom: none;
 }
 
-
 button#copiar-historico {
     margin-top: 10px;
     padding: 10px 20px;
@@ -124,33 +130,54 @@ button#copiar-historico {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button#copiar-historico:hover {
     background-color: #559EB7;
+    transform: scale(1.05);
 }
 
-
-
 footer {
-    position: fixed; /* Mantém o rodapé fixo */
-    bottom: 0; /* Posiciona na parte inferior */
-    left: 0; /* Garante alinhamento à esquerda */
-    width: 100%; /* Ocupa toda a largura da página */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     background: #559EB7;
     color: white;
     padding: 10px 20px;
     text-align: center;
-    border-radius: 0; /* Remove bordas arredondadas para um design fixo */
-    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2); /* Sombra sutil */
-}
-
-.conteudo {
-    margin-bottom: 60px; /* Garante que o conteúdo não fique encoberto pelo rodapé */
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
 }
 
 footer p {
     margin: 5px 0;
     font-size: 14px;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .cabecalho {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cabecalho img {
+        margin: 0 auto 10px;
+    }
+
+    .conteudo {
+        width: 100%;
+        margin-bottom: 70px; /* Ajusta para rodapé fixo */
+    }
+
+    .Busca input {
+        width: 100%;
+    }
+
+    .Busca button {
+        width: 100%;
+        padding: 15px;
+        font-size: 14px;
+    }
 }
