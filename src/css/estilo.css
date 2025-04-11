@@ -1,72 +1,134 @@
+/* Estilo atualizado para melhor design */
 body {
     font-family: 'Roboto', sans-serif;
-    font-weight: 500;
+    font-weight: 400;
     margin: 0;
     padding: 0;
-    height: 100vh;
+    background-color: #f0f4f8;
     display: flex;
     flex-direction: column;
-    background-color: #f5f5f5;
-    text-align: center; 
-}
-
-.cabecalho, footer {
-    background-color: #008000;
-    color: white;
-    height: 80px;
-    display: flex;
     align-items: center;
-    justify-content: space-between; 
-    padding: 10px;
-    border-radius: 10px;
-}
-
-.cabecalho .logo-patrimonio {
-    width: 15%;  
-    height: auto; 
-    float: left;
-}
-
-.cabecalho .logo-ufmg {
-    width: 25%;  
-    height: auto; 
-    float: right;
-}
-
-.cabecalho .titulo, footer .texto {
-    flex-grow: 1;
     text-align: center;
 }
 
-footer {
-    position: sticky;
-    bottom: 0;
+.cabecalho {
+    background: linear-gradient(90deg, #007f00, #00b300);
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cabecalho img {
+    height: 60px;
+}
+
+.cabecalho .titulo {
+    font-size: 24px;
+    font-weight: 500;
 }
 
 .conteudo {
-    flex-grow: 1;
+    margin-top: 30px;
     padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
 }
 
 .Busca {
     display: flex;
     justify-content: center;
     gap: 10px;
+    margin-bottom: 20px;
 }
 
 .Busca input {
     padding: 10px;
     font-size: 16px;
+    width: 70%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.Busca .botao {
-    padding: 10px 20px;
+.Busca button {
+    background-color: #007f00;
+    color: white;
+    border: none;
+    padding: 12px 20px;
     font-size: 16px;
-    background-color: #008000;
-    color: white; 
-    border-radius: 10px; 
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.Busca button:hover {
+    background-color: #005f00;
 }
 
 .resultado {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.historico {
     margin-top: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.historico h3 {
+    font-size: 18px;
+    color: #007f00;
+    margin-bottom: 10px;
+}
+
+.historico ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.historico ul li {
+    font-size: 14px;
+    color: #333;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.historico ul li:last-child {
+    border-bottom: none;
+}
+
+footer {
+    position: fixed; /* Mantém o rodapé fixo */
+    bottom: 0; /* Posiciona na parte inferior */
+    left: 0; /* Garante alinhamento à esquerda */
+    width: 100%; /* Ocupa toda a largura da página */
+    background: #007f00;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    border-radius: 0; /* Remove bordas arredondadas para um design fixo */
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+}
+
+.conteudo {
+    margin-bottom: 60px; /* Garante que o conteúdo não fique encoberto pelo rodapé */
+}
+
+footer p {
+    margin: 5px 0;
+    font-size: 14px;
 }
