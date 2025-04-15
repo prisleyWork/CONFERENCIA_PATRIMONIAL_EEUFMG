@@ -4,6 +4,9 @@ var workbooks = {
     baixados: null,
     internos: null
 };
+let resultadosAvancado = [];
+let fragmentoAtual = '';
+let indiceAvancadoAtual = 0;
 
 // Função para carregar as planilhas
 function carregarPlanilhas() {
@@ -99,6 +102,7 @@ function calcularSimilaridade(codigo1, codigo2) {
 
 // Função para buscar informações básicas
 function buscar() {
+    document.getElementById('resultado').innerHTML = ''; // limpa resultados anteriores
     var inputField = document.getElementById('numero');
     var formattedInput = formatInput(inputField.value);
     var resultado = document.getElementById('resultado');
@@ -173,121 +177,215 @@ function buscar() {
 
 // Função para busca avançada com base no fragmento
 function buscarATMAvancado() {
-    var inputField = document.getElementById('numero');
-    var modoBusca = document.getElementById('modo-busca').value; // Verifica o modo selecionado (ATM ou patrimônio)
-    var fragmento = inputField.value.trim(); // Remove espaços extras do input
-    var resultados = []; // Armazena os resultados encontrados
+    const resultadoDiv = document.getElementById('resultado');
+    resultadoDiv.innerHTML = '';
+    const inputField = document.getElementById('numero');
+    const modoBusca = document.getElementById('modo-busca').value;
+    let fragmento = inputField.value.trim();
+    const resultados = [];
 
-    // Validação: o fragmento de busca não pode estar vazio
+
     if (!fragmento) {
-        document.getElementById('resultado').innerHTML = '<p>Por favor, insira pelo menos um fragmento para busca avançada.</p>';
+        resultadoDiv.innerHTML = '<p>Por favor, insira pelo menos um fragmento para busca avançada.</p>';
         return;
     }
 
-    // Realiza a busca em cada planilha
-    ['ativos', 'baixados', 'internos'].forEach(estrutura => {
-        var workbook = workbooks[estrutura];
-        if (workbook) {
-            var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-            var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+    if (modoBusca === 'descricao') {
+        setTimeout(() => buscarPorDescricao(), 500);
+        return;
+    }
+
+    if (modoBusca === 'patrimonio') {
+        fragmento = formatInput(fragmento);
+        if (!/^[0-9]+$/.test(fragmento)) {
+            resultadoDiv.innerHTML = '<p>Por favor, insira apenas números para busca por patrimônio.</p>';
+            return;
+        }
+    }
+
+    if (modoBusca === 'atm') {
+        fragmento = fragmento.replace(/[^0-9]/g, '');
+        if (!/^[0-9]{1,12}$/.test(fragmento)) {
+            resultadoDiv.innerHTML = '<p>Fragmento inválido para ATM. Use apenas números.</p>';
+            return;
+        }
+    }
+
+        setTimeout(() => {
+        resultadosAvancado = [];
+        fragmentoAtual = fragmento;
+        indiceAvancadoAtual = 0;
+
+        ['ativos', 'baixados', 'internos'].forEach(estrutura => {
+            const workbook = workbooks[estrutura];
+            if (!workbook) return;
+
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
             jsonData.forEach(item => {
-                // Define qual campo verificar com base no modo de busca (ATM ou patrimônio)
-                var codigoBanco = modoBusca === 'atm' ? String(item[2]) : String(item[0]);
+                const codigoBanco = modoBusca === 'atm' ? String(item[2]).replace(/[^0-9]/g, '') : String(item[0]);
+                if (!codigoBanco) return;
 
-                // Verifica se o fragmento está contido no campo correspondente
                 if (codigoBanco.includes(fragmento)) {
-                    let translatedCondition = translateCondition(item[3]);
-                    let translatedSituation = translateSituation(item[5]);
-                    let atmInfo = item[2];
-                    let atmDisplay = atmInfo ? `<br><b>ATM:</b> ${atmInfo}` : '';
+                    let resultadoTratado;
+                    if (estrutura === 'baixados') {
+                        resultadoTratado = `
+                            <b>Número de patrimônio:</b> ${item[0]}-${item[1]}<br>
+                            <b>Número ATM:</b> ${item[3]}<br>
+                            <b>Setor:</b> ${item[10]}<br>
+                            <b>Descrição:</b> ${item[2]}<br>
+                            <b>Último Local da Guarda:</b> ${item[13]}<br>
+                            <b>Observação:</b> <b>Bens baixados devem ser mantidos no local de guarda atual. Caso deseje desfazer do bem, cadastre no sistema de desfazimento.</b>
+                        `;
+                    } else {
+                        let translatedCondition = translateCondition(item[3]);
+                        let translatedSituation = translateSituation(item[5]);
+                        let atmInfo = item[2];
+                        let atmDisplay = atmInfo ? `<br><b>ATM:</b> ${atmInfo}` : '';
 
-                    // Formatação dos resultados
-                    let resultadoTratado = `
-                        <b>Número de patrimônio:</b> ${item[0]}-${item[1]}<br>
-                        <b>Tipo:</b> ${item[25]}<br>
-                        <b>Descrição:</b> ${item[8]}<br>
-                        <b>Situação:</b> ${translatedSituation}<br>
-                        <b>Condição do Bem:</b> ${translatedCondition}<br>
-                        <b>Local da Guarda:</b> ${item[17]}<br>
-                        <b>Responsável:</b> ${item[27]}${atmDisplay}
-                    `;
+                        resultadoTratado = `
+                            <b>Número de patrimônio:</b> ${item[0]}-${item[1]}<br>
+                            <b>Tipo:</b> ${item[25]}<br>
+                            <b>Descrição:</b> ${item[8]}<br>
+                            <b>Situação:</b> ${translatedSituation}<br>
+                            <b>Condição do Bem:</b> ${translatedCondition}<br>
+                            <b>Local da Guarda:</b> ${item[17]}<br>
+                            <b>Responsável:</b> ${item[27]}${atmDisplay}
+                        `;
+                    }
 
-                    resultados.push({
-                        resultadoTratado: resultadoTratado,
-                        codigoBanco: codigoBanco,
-                        modo: modoBusca === 'atm' ? 'ATM' : 'Patrimônio'
-                    });
-
-                    // Limita os resultados a 5 itens
-                    if (resultados.length >= 5) return;
+                    resultadosAvancado.push({ resultadoTratado });
                 }
             });
-        } else {
-            console.error(`Planilha ${estrutura} não carregada corretamente.`);
-        }
-    });
+        });
 
-    // Exibe os resultados ou uma mensagem de erro
-    exibirResultadosTratados(resultados, fragmento);
+        mostrarLoteAvancado(); // nova função!
+    }, 500);
 }
 
-// Função para busca por descrição com base em palavras-chave
-function buscarPorDescricao() {
-    var inputField = document.getElementById('numero');
-    var palavraChave = inputField.value.trim(); // Remove espaços extras do input
-    var resultados = []; // Armazena os resultados encontrados
+// Atualizar exibirResultadosTratados()
+function mostrarLoteAvancado() {
+    const resultadoDiv = document.getElementById('resultado');
 
-    // Validação: a palavra-chave não pode estar vazia
+    if (indiceAvancadoAtual === 0) {
+        resultadoDiv.innerHTML = `<h3>🔎 Resultados para: <strong>${fragmentoAtual}</strong></h3>`;
+    }
+
+    const lote = resultadosAvancado.slice(indiceAvancadoAtual, indiceAvancadoAtual + 10);
+    lote.forEach(resultado => {
+        resultadoDiv.innerHTML += `
+            <p>
+                ${resultado.resultadoTratado}<br>
+                <button onclick="adicionarAoHistorico(\`${resultado.resultadoTratado}\`)">Adicionar ao Histórico</button>
+            </p>
+            <hr>
+        `;
+    });
+
+    indiceAvancadoAtual += 10;
+
+    if (indiceAvancadoAtual < resultadosAvancado.length) {
+        resultadoDiv.innerHTML += `
+            <div style="text-align:center; margin: 1rem;">
+                <button onclick="mostrarLoteAvancado()">Carregar mais</button>
+            </div>
+        `;
+    } else if (indiceAvancadoAtual === 0) {
+        resultadoDiv.innerHTML = `<p>🔎 Nenhuma correspondência encontrada para "${fragmentoAtual}".</p>`;
+    }
+}
+
+
+// Atualizar exibirResultadosDescricao()
+function exibirResultadosDescricao(resultados, palavraChave) {
+    const resultadoDiv = document.getElementById('resultado');
+    if (resultados.length > 0) {
+        resultadoDiv.innerHTML = `<h3>🔎 Resultados para: <strong>${palavraChave}</strong></h3>`;
+        resultados.forEach(resultado => {
+            resultadoDiv.innerHTML += `
+                <p>
+                    ${resultado.resultadoTratado}<br>
+                    <button onclick="adicionarAoHistorico(\`${resultado.resultadoTratado}\`)">Adicionar ao Histórico</button>
+                </p>
+                <hr>
+            `;
+        });
+    } else {
+        resultadoDiv.innerHTML = `<p>🔎 Nenhuma correspondência encontrada para "${palavraChave}".</p>`;
+    }
+}
+
+// Atualizar buscarPorDescricao para busca exata
+function buscarPorDescricao() {
+    const resultadoDiv = document.getElementById('resultado');
+    resultadoDiv.innerHTML = '';
+    const inputField = document.getElementById('numero');
+    const palavraChave = removerAcentos(inputField.value.trim().toLowerCase());
+    const resultados = [];
+
     if (!palavraChave) {
-        document.getElementById('resultado').innerHTML = '<p>Por favor, insira ao menos uma palavra-chave para busca por descrição.</p>';
+        resultadoDiv.innerHTML = '<p>Por favor, insira ao menos uma palavra-chave para busca por descrição.</p>';
         return;
     }
 
-    // Realiza a busca em cada planilha
-    ['ativos', 'baixados'].forEach(estrutura => {
-        var workbook = workbooks[estrutura];
-        if (workbook) {
-            var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-            var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+    setTimeout(() => {
+        ['ativos', 'baixados', 'internos'].forEach(estrutura => {
+            const workbook = workbooks[estrutura];
+            if (!workbook) return;
+
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
             jsonData.forEach(item => {
-                // Definir a descrição com base na estrutura
-                var descricaoCampo = estrutura === 'ativos' ? item[8] : item[2]; // Seleciona a coluna correta
-                var descricao = String(descricaoCampo); // Converte para string
+                // Campos para busca: descrição e códigos que contenham texto
+                const descricaoCampo = estrutura === 'ativos' ? item[8] : item[2];
+                const codigoCampo = String(item[0]) + String(item[1]); // exemplo: 2024nE000359
 
-                // Verifica se a palavra-chave está contida na descrição
-                if (descricao.toLowerCase().includes(palavraChave.toLowerCase())) {
-                    let translatedCondition = translateCondition(item[3]);
-                    let translatedSituation = translateSituation(item[5]);
+                const descricao = descricaoCampo ? removerAcentos(String(descricaoCampo).toLowerCase()) : '';
+                const codigo = removerAcentos(codigoCampo.toLowerCase());
 
-                    // Formatação dos resultados
-                    let resultadoTratado = `
-                        <b>Número de patrimônio:</b> ${item[0]}-${item[1]}<br>
-                        <b>Tipo:</b> ${item[25]}<br>
-                        <b>Descrição:</b> ${descricao}<br>
-                        <b>Situação:</b> ${translatedSituation}<br>
-                        <b>Condição do Bem:</b> ${translatedCondition}<br>
-                        <b>Local da Guarda:</b> ${item[17]}<br>
-                        <b>Responsável:</b> ${item[27]}
-                    `;
+                if (descricao.includes(palavraChave) || codigo.includes(palavraChave)) {
+                    let resultadoTratado;
 
-                    resultados.push({
-                        resultadoTratado: resultadoTratado,
-                        descricao: descricao
-                    });
+                    if (estrutura === 'baixados') {
+                        resultadoTratado = `
+                            <b>Número de patrimônio:</b> ${item[0]}-${item[1]}<br>
+                            <b>Número ATM:</b> ${item[3]}<br>
+                            <b>Setor:</b> ${item[10]}<br>
+                            <b>Descrição:</b> ${item[2]}<br>
+                            <b>Último Local da Guarda:</b> ${item[13]}<br>
+                            <b>Observação:</b> <b>Bens baixados devem ser mantidos no local de guarda atual. Caso deseje desfazer do bem, cadastre no sistema de desfazimento.</b>
+                        `;
+                    } else {
+                        const translatedCondition = translateCondition(item[3]);
+                        const translatedSituation = translateSituation(item[5]);
+                        const atmInfo = item[2];
+                        const atmDisplay = atmInfo ? `<br><b>ATM:</b> ${atmInfo}` : '';
 
-                    // Limita os resultados a 5 itens
-                    if (resultados.length >= 5) return;
+                        resultadoTratado = `
+                            <b>Número de patrimônio:</b> ${item[0]}-${item[1]}<br>
+                            <b>Tipo:</b> ${item[25]}<br>
+                            <b>Descrição:</b> ${item[8]}<br>
+                            <b>Situação:</b> ${translatedSituation}<br>
+                            <b>Condição do Bem:</b> ${translatedCondition}<br>
+                            <b>Local da Guarda:</b> ${item[17]}<br>
+                            <b>Responsável:</b> ${item[27]}${atmDisplay}
+                        `;
+                    }
+
+                    resultados.push({ resultadoTratado });
+                    if (resultados.length >= 10) return;
                 }
             });
-        } else {
-            console.error(`Planilha ${estrutura} não carregada corretamente.`);
-        }
-    });
+        });
 
-    // Exibe os resultados ou uma mensagem de erro
-    exibirResultadosDescricao(resultados, palavraChave);
+        exibirResultadosDescricao(resultados, palavraChave);
+    }, 500);
+}
+
+function removerAcentos(texto) {
+    return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 // Função para exibir resultados tratados (usado para busca avançada e por descrição)
@@ -309,21 +407,43 @@ function exibirResultadosTratados(resultados, fragmento) {
     }
 }
 
+let resultadosDescricao = [];
+let palavraChaveAtual = '';
+let indiceAtual = 0;
+
 function exibirResultadosDescricao(resultados, palavraChave) {
-    var resultadoDiv = document.getElementById('resultado');
-    if (resultados.length > 0) {
-        resultadoDiv.innerHTML = `<h3>Resultados para "${palavraChave}":</h3>`;
-        resultados.forEach(resultado => {
-            resultadoDiv.innerHTML += `
-                <p>
-                    ${resultado.resultadoTratado}<br>
-                    <button onclick="adicionarAoHistorico(\`${resultado.resultadoTratado}\`)">Adicionar ao Histórico</button>
-                </p>
-                <hr>
-            `;
-        });
-    } else {
-        resultadoDiv.innerHTML = `<p>Nenhuma correspondência encontrada para "${palavraChave}".</p>`;
+    resultadosDescricao = resultados;
+    palavraChaveAtual = palavraChave;
+    indiceAtual = 0;
+    mostrarLoteDescricao();
+}
+
+function mostrarLoteDescricao() {
+    const resultadoDiv = document.getElementById('resultado');
+
+    if (indiceAtual === 0) {
+        resultadoDiv.innerHTML = `<h3>🔎 Resultados para: <strong>${palavraChaveAtual}</strong></h3>`;
+    }
+
+    const lote = resultadosDescricao.slice(indiceAtual, indiceAtual + 10);
+    lote.forEach(resultado => {
+        resultadoDiv.innerHTML += `
+            <p>
+                ${resultado.resultadoTratado}<br>
+                <button onclick="adicionarAoHistorico(\`${resultado.resultadoTratado}\`)">Adicionar ao Histórico</button>
+            </p>
+            <hr>
+        `;
+    });
+
+    indiceAtual += 10;
+
+    if (indiceAtual < resultadosDescricao.length) {
+        resultadoDiv.innerHTML += `
+            <div style="text-align:center; margin: 1rem;">
+                <button onclick="mostrarLoteDescricao()">Carregar mais</button>
+            </div>
+        `;
     }
 }
 
@@ -343,33 +463,63 @@ function normalizarCodigoATM(codigo) {
     return codigo.replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
 }
 
-// Função para ativar busca avançada ao pressionar Enter
+// Ativa busca quando pressionar ENTER
 document.getElementById('numero').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
-        var checkbox = document.getElementById('ativar-busca-avancada');
+        const checkbox = document.getElementById('ativar-busca-avancada');
         if (checkbox.checked) {
-            buscarATMAvancado();
+            verificarModoBusca(); // Corrigido aqui
         } else {
-            buscar(); // Realiza a busca normal
+            buscar();
         }
     }
 });
 
-// Função para exibir/ocultar o menu avançado baseado na checkbox
+// Alterna entre busca simples e avançada (botão e menu)
 function toggleBuscaAvancada() {
-    var checkbox = document.getElementById('ativar-busca-avancada');
-    var menuBuscaAvancada = document.getElementById('menu-busca-avancada');
-    var botaoBusca = document.querySelector('.Busca button'); // Seleciona o botão de busca padrão
+    const checkbox = document.getElementById('ativar-busca-avancada');
+    const menuBuscaAvancada = document.getElementById('menu-busca-avancada');
+    const botaoBusca = document.querySelector('.Busca button');
 
     if (checkbox.checked) {
-        // Exibe o menu de busca avançada e altera o texto do botão
         menuBuscaAvancada.style.display = 'block';
-        botaoBusca.textContent = 'Buscar Avançada'; // Altera o texto do botão
-        botaoBusca.setAttribute('onclick', 'buscarATMAvancado()'); // Atualiza a ação do botão
+        botaoBusca.textContent = 'Buscar Avançada';
+        botaoBusca.setAttribute('onclick', 'verificarModoBusca()');
     } else {
-        // Oculta o menu de busca avançada e restaura o botão padrão
         menuBuscaAvancada.style.display = 'none';
-        botaoBusca.textContent = 'Buscar'; // Restaura o texto original do botão
-        botaoBusca.setAttribute('onclick', 'buscar()'); // Restaura a ação do botão padrão
+        botaoBusca.textContent = 'Buscar';
+        botaoBusca.setAttribute('onclick', 'buscar()');
     }
 }
+
+// Decide qual função de busca chamar com base no modo selecionado
+function verificarModoBusca() {
+    const modo = document.getElementById('modo-busca').value;
+    if (modo === 'descricao') {
+        buscarPorDescricao();
+    } else {
+        buscarATMAvancado();
+    }
+}
+
+function limparHistorico() {
+    const listaHistorico = document.getElementById('lista-historico');
+    listaHistorico.innerHTML = ''; // Remove todos os itens do histórico
+}
+function copiarhistorico() {
+    const lista = document.getElementById('lista-historico');
+    const itens = Array.from(lista.getElementsByTagName('li')).map(item => item.innerText).join('\n');
+
+    if (!itens) {
+        alert('O histórico está vazio.');
+        return;
+    }
+
+    navigator.clipboard.writeText(itens).then(() => {
+        alert('Histórico copiado para a área de transferência.');
+    }).catch(err => {
+        console.error('Erro ao copiar histórico:', err);
+        alert('Não foi possível copiar o histórico.');
+    });
+}
+

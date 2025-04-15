@@ -1,39 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta Patrimonial By EEUFMG</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./src/css/reset.css">
-    <link rel="stylesheet" href="./src/css/estilo.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consulta Patrimonial | EEUFMG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./src/css/reset.css" />
+    <link rel="stylesheet" href="./src/css/estilo.css" />
 </head>
 <body>
     <!-- Cabeçalho -->
     <div class="cabecalho">
         <a href="https://patrimonio.eng.ufmg.br/" target="_blank" aria-label="Link para a página do Patrimônio">
-            <img src="./src/imagens/ico.png" alt="Logo do Patrimônio">
+            <img src="./src/imagens/ico.png" alt="Logo do Patrimônio" />
         </a>
         <div class="titulo">Consulta Patrimonial</div>
         <a href="https://ufmg.br/" target="_blank" aria-label="Link para a página da UFMG">
-            <img src="./src/imagens/UFMG.png" alt="Logo da UFMG">
+            <img src="./src/imagens/UFMG.png" alt="Logo da UFMG" />
         </a>
     </div>
 
     <!-- Conteúdo principal -->
     <div class="conteudo">
-        <div class="Busca">
-            <!-- Campo de entrada -->
+        <div class="Busca" role="search">
             <input 
                 type="text" 
                 id="numero" 
+                inputmode="text"
                 placeholder="Digite o patrimônio ou palavra-chave aqui" 
-                aria-label="Digite o código do patrimônio ou uma palavra-chave para consulta">
+                aria-label="Digite o código do patrimônio ou uma palavra-chave para consulta"
+                required 
+            />
             <button id="botao-busca" onclick="buscar()">Buscar</button>
-            
+
             <!-- Checkbox para ativar busca avançada -->
             <label for="ativar-busca-avancada" class="label-avancada">
-<input type="checkbox" id="ativar-busca-avancada" onclick="toggleBuscaAvancada()"> Busca Avançada            </label>
+                <input type="checkbox" id="ativar-busca-avancada" onclick="toggleBuscaAvancada()" />
+                Ativar Busca Avançada
+            </label>
 
             <!-- Menu de busca avançada -->
             <div id="menu-busca-avancada" style="display: none; margin-top: 20px;">
@@ -41,28 +45,31 @@
                 <select id="modo-busca" aria-label="Escolha o tipo de busca">
                     <option value="atm">Buscar por ATM</option>
                     <option value="patrimonio">Buscar por Patrimônio</option>
-                    <option value="descricao">Buscar por Descrição</option> <!-- Nova opção adicionada -->
+                    <option value="descricao">Buscar por Descrição</option>
                 </select>
             </div>
         </div>
 
         <!-- Resultados -->
-        <div id="resultado" class="resultado">
-            <p id="estado-carregamento" style="display: none;">Carregando dados...</p>
+        <div id="resultado" class="resultado" aria-live="polite" role="status">
         </div>
 
         <!-- Histórico -->
         <div id="historico" class="historico">
             <h3>Histórico de Bens Pesquisados</h3>
             <ul id="lista-historico" aria-label="Lista de histórico de bens pesquisados"></ul>
+            <button id="limpar-historico" onclick="limparHistorico()" aria-label="Limpar histórico de bens pesquisados">Limpar Histórico</button>
+            <button id="copiar-historico"onclick="copiarhistorico()" aria-label="copia histórico de bens pesquisados">Copiar Histórico</button>
         </div>
     </div>
 
+    
     <!-- Rodapé -->
     <footer>
-        <p>Atualização Abril 2025</p>
+        <p>Atualização: Abril 2025</p>
         <p>Versão: 2.0.0</p>
-        <p>Desenvolvido na Seção de Patrimônio da Escola de Engenharia UFMG - <span id="anoAtual"></span></p>
+        <p>Desenvolvido pela Seção de Patrimônio da Escola de Engenharia da UFMG</p>
+        <p>&copy; <span id="anoAtual"></span> UFMG - Todos os Direitos Reservados</p>
     </footer>
 
     <!-- Scripts -->
