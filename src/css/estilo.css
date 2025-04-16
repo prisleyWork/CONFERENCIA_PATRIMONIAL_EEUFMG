@@ -166,7 +166,7 @@ html, body {
         cursor: pointer;
         transition: border-color 0.3s ease;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        background-color: #004a7552;
+        background-color: #ffffff;
     }
     
     select:hover, select:focus {
@@ -305,7 +305,7 @@ html, body {
     padding: 10px;
     font-size: 16px;
     width: 70%;
-    border: 1px solid #ccc;
+    border: 1px solid #000000;
     border-radius: 8px;
     box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease;
@@ -432,6 +432,14 @@ footer p {
 
 
 /* Responsividade para telas menores */
+/* Adicionar espaçamento ao conteúdo */
+.conteudo {
+    padding: 20px; /* Distância de 20px em todas as direções */
+    margin: 20px; /* Adiciona espaço ao redor */
+}
+
+
+/* Reescrita do @media para melhor adaptação */
 @media (max-width: 768px) {
     .cabecalho {
         flex-direction: column;
